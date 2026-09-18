@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 interface PropTypes {
@@ -6,8 +7,10 @@ interface PropTypes {
 }
 
 const ProtectedRoute = (props: PropTypes) => {
- props
+    const { children } = props;
 
+    const auth = cookieStore.get('auth');
+    
 }
 
 export default ProtectedRoute;
