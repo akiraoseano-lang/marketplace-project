@@ -14,6 +14,6 @@ if __name__ == "__main__":
     connection = get_connection()
 
     if connection.is_connected():
-        print("Berhasil terhubung ke MySQL!")
+        print("Anda telah berhasil terhubung ke MySQL!")
 
     connection.close()

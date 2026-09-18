@@ -25,12 +25,12 @@ def login(data: LoginRequest):
 
     if user is None:
         return {
-            "message": "Email atau password anda salah"
+            "message": "Maaf, email atau password anda salah"
         }
 
     if user["password"] != data.password:
         return {
-            "message": "Email atau password salah"
+            "message": "Maaf, email atau password anda salah"
         }
 
     return {
