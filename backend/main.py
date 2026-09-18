@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from routers.products import router as products_router
+from routers.login import router as login_router
+
 app = FastAPI()
 
 app.add_middleware(
@@ -13,19 +16,7 @@ app.add_middleware(
 
 @app.get('/')
 def root():
-    return {'message': 'Marketplace API is Running'}
+    return {'message': 'Good job nigga, marketplace API is Running'}
 
-@app.get('/api/products')
-def get_products():
-    return [
-        {
-            "id": 1,
-            "name": "Laptop",
-            "price": 3000000
-        },
-        {
-            "id": 2,
-            "name": "Mouse",
-            "price": 100000
-        }
-    ]
+app.include_router(products_router)
+app.include_router(login_router)
