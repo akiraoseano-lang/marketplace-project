@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from schemas.product import Product
 from database.connection import get_connection
+from utils.auth import get_current_admin
 
 router = APIRouter(
     prefix="/api/products",
@@ -22,7 +23,10 @@ def get_products():
     return products
 
 @router.post("/")
-def create_product(product: Product):
+def create_product(
+    product: Product,
+    current_admin: dict = Depends(get_current_admin)
+):
 
     connection = get_connection()
     cursor = connection.cursor()
@@ -33,7 +37,7 @@ def create_product(product: Product):
 
     connection.commit()
 
-    product_id = cursor.lasrowid
+    product_id = cursor.lastrowid
 
     cursor.close()
     connection.close()
@@ -66,8 +70,11 @@ def get_product(product_id: int):
     return product
 
 @router.put("/{product_id}")
-def update_product(product_id: int, product: Product):
-
+def update_product(
+    product_id: int,
+    product: Product,
+    current_admin: dict = Depends(get_current_admin)
+):
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -100,7 +107,10 @@ def update_product(product_id: int, product: Product):
     }
 
 @router.delete("/{product_id}")
-def delete_product(product_id: int):
+def delete_product(
+    product_id: int,
+    current_admin: dict = Depends(get_current_admin)
+):
 
     connection = get_connection()
     cursor = connection.cursor()
@@ -122,5 +132,5 @@ def delete_product(product_id: int):
     connection.close()
 
     return {
-        "message": "Product detected successfully"
+        "message": "Product deleted successfully"
     }

@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routers.products import router as products_router
 from routers.login import router as login_router
+from routers.register import router as register_router
 
 app = FastAPI()
 
@@ -16,7 +17,8 @@ app.add_middleware(
 
 @app.get('/')
 def root():
-    return {'message': 'Good job nigga, marketplace API is Running'}
+    return {'message': 'Good job bro, marketplace API is Running'}
 
 app.include_router(products_router)
 app.include_router(login_router)
+app.include_router(register_router)

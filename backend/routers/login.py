@@ -1,6 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from schemas.login import LoginRequest
 from database.connection import get_connection
+from utils.password import verify_password
+from utils.jwt import create_access_token
+from utils.auth import get_current_user
 
 router  = APIRouter(
     prefix="/api",
@@ -28,16 +31,32 @@ def login(data: LoginRequest):
             "message": "Maaf, email atau password anda salah"
         }
 
-    if user["password"] != data.password:
+    if not verify_password(data.password, user["password"]):
         return {
-            "message": "Maaf, email atau password anda salah"
+            "message": "Emmail atau password yang anda masukkan salah"
         }
+
+    access_token = create_access_token({
+        "user_id": user["id"],
+        "email": user["email"],
+        "role": user["role"]
+    })
 
     return {
         "message": "Login berhasil",
+        "access_token": access_token,
+        "token_type": "bearer",
         "user": {
             "id": user["id"],
             "name": user["name"],
-            "email": user["email"]
+            "email": user["email"],
+            "role": user["role"]
         }
+    }
+
+@router.get("/profile")
+def profile(current_user: dict = Depends(get_current_user)):
+    return {
+        "message": "Token valid",
+        "user": current_user
     }
