@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers.products import router as products_router
 from routers.login import router as login_router
 from routers.register import router as register_router
+from routers.cart import router as cart_router
 
 app = FastAPI()
 
@@ -22,3 +23,4 @@ def root():
 app.include_router(products_router)
 app.include_router(login_router)
 app.include_router(register_router)
+app.include_router(cart_router)
