@@ -1,17 +1,15 @@
 import hashlib
 import hmac
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request
 from database.connection import get_connection
-from utils.auth import get_current_user
-from utils.midtrans import snap, SERVER_KEY
-from schemas.payment import PaymentCreate
+from utils.midtrans import SERVER_KEY
 
-router = APIRouter
-prefix="/api/payment",
-tags=["payment"]
-
+router = APIRouter(
+    prefix="/api/payment",
+    tags=["payment"]
+)
 
 @router.post("/notification")
 async def payment_notification(request: Request):
@@ -79,7 +77,15 @@ async def payment_notification(request: Request):
             )
 
         
-        if Decimal(gross_amount) != Decimal(str(order["total_price"])):
+        try:
+            gross = Decimal(gross_amount)
+        except (InvalidOperation, ValueError):
+            raise HTTPException(
+                status_code=400,
+                detail="Nominal pembayaran tidak valid"
+            )
+
+        if gross != Decimal(str(order["total_price"])):
             raise HTTPException(
                 status_code=400,
                 detail="Nominal pembayaran tidak cocok"
