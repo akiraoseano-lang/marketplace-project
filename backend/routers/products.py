@@ -65,7 +65,7 @@ def get_product(product_id: int):
     connection.close()
 
     if product is None:
-        return {"message": "Sorry, product not found"}
+        return {"message": "Sorry, product not found in here"}
 
     return product
 
@@ -95,7 +95,7 @@ def update_product(
         cursor.close()
         connection.close()
 
-        return {"message": "Sorry, product not found"}
+        return {"message": "Sorry, product not found in here"}
 
     cursor.close()
     connection.close()
@@ -126,11 +126,11 @@ def delete_product(
         cursor.close()
         connection.close()
 
-        return {"message" : "Sorry, product not found"}
+        return {"message" : "Sorry, product not found in here"}
 
     cursor.close()
     connection.close()
 
     return {
-        "message": "Product deleted successfully"
+        "message": "Okay, Product deleted successfully"
     }

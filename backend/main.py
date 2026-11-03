@@ -22,6 +22,10 @@ app.add_middleware(
 def root():
     return {'message': 'Good job bro, marketplace API is Running'}
 
+@app.get('/health')
+def health():
+    return {'status': 'ok'}
+
 app.include_router(products_router)
 app.include_router(login_router)
 app.include_router(register_router)
