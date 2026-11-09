@@ -45,7 +45,7 @@ def create_payment(
         if order["payment_status"] == "paid":
             raise HTTPException(
                 status_code=400,
-                detail="Order already paid"
+                detail="Tahnk you, order already paid"
             )
 
         if order["status"] != "pending":
@@ -82,7 +82,7 @@ def create_payment(
         connection.commit()
 
         return {
-            "message": "Token pembayaran berhasil dibuat",
+            "message": "Nice, Token pembayaran berhasil dibuat",
             "order_id": order["id"],
             "total_price": order["total_price"],
             "payment_status": "pending",
@@ -101,7 +101,7 @@ def create_payment(
 
         raise HTTPException(
             status_code=502,
-            detail="Gagal memproses notifikasi pembayaran"
+            detail="Maaf, Gagal memproses notifikasi pembayaran"
         ) from error
 
     finally:
