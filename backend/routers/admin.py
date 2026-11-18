@@ -130,5 +130,55 @@ def update_order_status(
         payment_status = order["payment_status"]
 
         allowed_transitions = {
-            "pending"
+            "pending" : ["processing", "cancelled"],
+            "processing" : ["shipped"],
+            "shipped": ["completed"],
+            "completed": [],
+            "cancelled": []
         }
+
+        if new_status not in allowed_transitions.get(
+            current_status, []
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Perubahan status dari {current_status} "
+                f"ke {new_status} tidak diizinkan"
+            )
+
+        if new_status == "processing" and payment_status != "paid":
+            raise HTTPException(
+                status_code=400,
+                detail=f"Perubahan status dari {current_status} "
+                f"ke {new_status} tidak diizinkan"
+            )
+
+        if new_status == "Processing" and payment_status != "paid":
+            raise HTTPException(
+                status_code=400,
+                detail="Pesanan already paid. Process will be first handle."
+            )
+
+        cursor.execute("""
+            UPDATE orders
+            SET  status = %s
+            WHERE id = %s
+        """, (new_status, order_id))
+
+        connection.commit()
+
+        return {
+            "message": "Order status succesfully update",
+            "order_id": order_id,
+            "previous_status": current_status,
+            "new_status": new_status,
+            "payment_status": payment_status
+        }
+
+    except Exception:
+        connection.rollback()
+        raise
+
+    finally:
+        cursor.close()
+        connection.close()
