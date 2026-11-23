@@ -7,9 +7,10 @@ from routers.login import router as login_router
 from routers.register import router as register_router
 from routers.cart import router as cart_router
 from routers.orders import router as orders_router
+from routers.admin import router as admin_router
 
 app = FastAPI()
-
+    
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -32,3 +33,4 @@ app.include_router(register_router)
 app.include_router(cart_router)
 app.include_router(orders_router)
 app.include_router(payment.router)
+app.include_router(admin_router)
