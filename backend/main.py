@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import payment
+from routers.profile import router as profile_router
 
 from routers.products import router as products_router
 from routers.login import router as login_router
@@ -34,3 +35,4 @@ app.include_router(cart_router)
 app.include_router(orders_router)
 app.include_router(payment.router)
 app.include_router(admin_router)
+app.include_router(profile_router)
